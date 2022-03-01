@@ -21,9 +21,9 @@ public class Main extends Application {
         }
 
         public static void main(String[] args) throws SQLException {
-            String dbstring = "jdbc:oracle:thin:delphi.htl-leonding.ac.at:1521:delphidb";
+            String dbstring = "jdbc:oracle:thin:@delphi.htl-leonding.ac.at:1521:delphidb";
             Connection conn = DriverManager.getConnection(
-                    dbstring,"it190225",""
+                    dbstring,"it190225","oracle"
             );
             launch();
         }
