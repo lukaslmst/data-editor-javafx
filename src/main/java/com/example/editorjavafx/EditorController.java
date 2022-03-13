@@ -6,12 +6,12 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import org.w3c.dom.Text;
 
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.sql.*;
 
 public class EditorController {
 
@@ -28,18 +28,31 @@ public class EditorController {
 
     @FXML
     private Button connectBtn;
+    @FXML
+    private TextField password;
+    @FXML
+    private TextField username;
+    @FXML
+    private TextField dbString;
 
     public void connect(ActionEvent event) throws SQLException {
 
-        String password;
-        String username;
-        String dbString;
+        String passwordStr = password.getText();
+        String usernameStr = username.getText();
+        String dbStringStr = dbString.getText();
 
-        String dbstring = "jdbc:oracle:thin:@delphi.htl-leonding.ac.at:1521:delphidb";
 
         Connection conn = DriverManager.getConnection(
-                dbstring,"it190225","oracle"
+                dbStringStr,usernameStr,passwordStr
         );
+
+        //jdbc:oracle:thin:@delphi.htl-leonding.ac.at:1521:delphidb
+        PreparedStatement pstmt = conn.prepareStatement("select * from emp");
+        ResultSet rs = pstmt.executeQuery();
+
+        while (rs.next()){
+            System.out.println(rs.getString("EMPNO"));
+        }
 
 
     }
