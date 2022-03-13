@@ -6,6 +6,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import org.w3c.dom.Text;
@@ -19,7 +20,7 @@ public class EditorController {
     public static void show(Stage stage) throws IOException {
 
         FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("hello-view.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 320, 240);
+        Scene scene = new Scene(fxmlLoader.load(), 1000, 800);
 
         stage.setTitle("Hello!");
         stage.setScene(scene);
@@ -29,7 +30,7 @@ public class EditorController {
     @FXML
     private Button connectBtn;
     @FXML
-    private TextField password;
+    private PasswordField password;
     @FXML
     private TextField username;
     @FXML
@@ -40,7 +41,6 @@ public class EditorController {
         String passwordStr = password.getText();
         String usernameStr = username.getText();
         String dbStringStr = dbString.getText();
-
 
         Connection conn = DriverManager.getConnection(
                 dbStringStr,usernameStr,passwordStr
