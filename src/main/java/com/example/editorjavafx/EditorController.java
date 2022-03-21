@@ -41,6 +41,8 @@ public class EditorController {
     @FXML
     private TableView tableOut;
     @FXML
+    private TableView output;
+    @FXML
     private TableView dataField;
     Connect connection = new Connect();
 
@@ -59,7 +61,7 @@ public class EditorController {
 
     public void executeQuery(ActionEvent event) throws SQLException {
 
-        if(connected) {
+        if (connected) {
 
             String temp = queryField.getText();
 
@@ -72,39 +74,65 @@ public class EditorController {
                 PreparedStatement exe = connection.getConn().prepareStatement(queryArray[i]);
                 ResultSet rs = exe.executeQuery();
 
-                while (rs.next()) {
-                    for (int j = 0; j < rs.getMetaData().getColumnCount(); j++) {
-                        System.out.println(rs.getString(j + 1));
 
+                List<List<String>> data = new ArrayList<>();
+
+                while (rs.next()) {
+
+                    List tempList = new ArrayList();
+
+                    for (int j = 0; j < rs.getMetaData().getColumnCount(); j++) {
+                        tempList.add(rs.getString(i + 1));
                     }
+                    data.add(tempList);
                 }
+
+                System.out.println(data);
+
+                for (int g = 0; g < rs.getMetaData().getColumnCount(); g++) {
+                    final int id = g;
+                    TableColumn col = new TableColumn(rs.getMetaData().getColumnName(id + 1));
+
+                    col.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<List<String>, String>, ObservableValue<String>>() {
+                        @Override
+                        public ObservableValue call(TableColumn.CellDataFeatures<List<String>, String> data) {
+                            return new ReadOnlyStringWrapper(data.getValue().get(id));
+                        }
+                    });
+                    output.getColumns().add(col);
+                }
+                data.remove(0);
+                output.setItems(FXCollections.observableArrayList(data));
+
 
             }
         }
 
+
     }
+
 
     public void showData() throws SQLException {
 
 
-        TreeItem<String> temp =  panel.getSelectionModel().getSelectedItem();
+        TreeItem<String> temp = panel.getSelectionModel().getSelectedItem();
 
-        if(temp == null)
+        if (temp == null)
             return;
 
         String tableName = temp.getValue();
 
-        PreparedStatement pts =  connection.getConn().prepareStatement("select * from "+tableName);
+        PreparedStatement pts = connection.getConn().prepareStatement("select * from " + tableName);
         ResultSet rs = pts.executeQuery();
 
-        List<List<String>> data =new ArrayList<>();
+        List<List<String>> data = new ArrayList<>();
 
-        while (rs.next()){
+        while (rs.next()) {
 
-           List tempList = new ArrayList();
+            List tempList = new ArrayList();
 
             for (int i = 0; i < rs.getMetaData().getColumnCount(); i++) {
-                tempList.add(rs.getString(i+1));
+                tempList.add(rs.getString(i + 1));
             }
             data.add(tempList);
 
@@ -113,7 +141,7 @@ public class EditorController {
 
         for (int i = 0; i < rs.getMetaData().getColumnCount(); i++) {
             final int id = i;
-            TableColumn col = new TableColumn(rs.getMetaData().getColumnName(id+1));
+            TableColumn col = new TableColumn(rs.getMetaData().getColumnName(id + 1));
 
             col.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<List<String>, String>, ObservableValue<String>>() {
                 @Override
